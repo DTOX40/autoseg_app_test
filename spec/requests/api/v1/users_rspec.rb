@@ -4,17 +4,23 @@ require 'rails_helper'
 Rspec.describe'Users API', type: :request do
 	let!(:user) { create(:user) }  
 	let(:user_id) { user.id }
+	let(:headers) do
+		{
+
+			'Accept' => 'application/vnd.autoseg.v1'
+			'content-type' => Mime[:json].to_s 
+		}
+	end
 
 	before { host! 'api.autoseg.test' }
 
 	describe 'GET users/:id' do
 		before do
-			headers = { 'Accept' => 'application/vnd.taskmanager.v1' }
 			get "/users/#{user_id}", params: {}, headers: headers
 			end
 
 
-			conteext 'when the user exists' do
+			context 'when the user exists' do
 				it 'return the user' do 
 					user_response = JSON.parce(response.body)
 					expect(user_response['id']).to eq(user_id)
@@ -25,15 +31,14 @@ Rspec.describe'Users API', type: :request do
 		end	
 
 
-		conteext 'returns status coide 404' do
+		context 'returns status coide 404' do
 			expect(response).to have_http_status(404)
 	end
 
 
 	describe 'POST/user' do	
 		before do
-		headers = { 'Accept' => 'application/vnd.autoseg.v1' }
-		post '/users', params: {  user: user_params }, headers: header
+		post '/users', params: {  user: user_params }.to_json, headers: header
 	end
 
 
@@ -67,8 +72,7 @@ Rspec.describe'Users API', type: :request do
 
 		describe ' PUT /user/:id' do 
 			before do
-				headers = { 'Accept' => 'application/vnd.autoseg.v1' }
-				put "/user/#{user_id}", params: { user: user_params }, headers: headers
+				put "/user/#{user_id}", params: { user: user_params }.to_json, headers: headers
 end
 
 
