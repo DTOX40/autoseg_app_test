@@ -5,7 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
 
-  validate_uniquess_of :auth_token    
+  validates_uniqueness_of :auth_token    
   before_create :generate_authentication_token!
 
   
