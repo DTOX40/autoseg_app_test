@@ -22,8 +22,7 @@ Rspec.describe'Users API', type: :request do
 
 			context 'when the user exists' do
 				it 'return the user' do 
-					user_response = JSON.parce(response.body)
-					expect(user_response['id']).to eq(user_id)
+					expect(json_body['id']).to eq(user_id)
 			end		
 				it 'return status code 200' do
 					expect(response).to have_http_status(200)
@@ -49,8 +48,7 @@ Rspec.describe'Users API', type: :request do
 		end		
 
 		it 'return json data for the created user 'do
-			user_response = JASON.parce(response.body, symbolize_names: true)
-			expect(user_response[:email]).to eq(user_params[:email])
+			expect(json_body[:email]).to eq(user_params[:email])
 			end
 		end
 
@@ -63,8 +61,7 @@ Rspec.describe'Users API', type: :request do
 			end	
 
 			it 'return the jason data for the erros' do
-				user_response = JASON.parce(response.body, symbolize_names: true)
-				expect(user_response).to have_key(:erros)
+				expect(json_body).to have_key(:erros)
 
 			end	
 		end	
@@ -84,8 +81,7 @@ end
 		end
 
 		it 'return the jason data for the update users' do
-				user_response = JASON.parce(response.body, symbolize_names: true)
-				expect(user_response[:email]).to eq(user_params[:email])
+				expect(json_body[:email]).to eq(user_params[:email])
 		end				
 	end
 
@@ -97,8 +93,7 @@ context ' when the request params are valid' do
 		end
 
     it 'return the jason data for the erros' do
-				user_response = JASON.parce(response.body, symbolize_names: true)
-				expect(user_response).to have_key(:erros)
+				expect(json_body).to have_key(:erros)
 	  end
 	end
  end
