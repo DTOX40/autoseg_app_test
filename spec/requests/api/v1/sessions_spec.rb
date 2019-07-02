@@ -41,6 +41,25 @@ context 'when the credentials are incorret' do
 	   end
 	 end
   end
+
+  describe 'DELETE /Sessions/:id' do
+  	let(:auth_token) { user.auth_token }
+
+  	before do
+      delete "/Sessions/#{auth_token}" , paramas: {}, headers: headers
+  	end	
+
+
+  	it 'returns status code 204' do
+  		expect(response).to have_http_status(204)
+  	end
+  	
+
+  	it 'changes the user auth token' do
+  		expect( User.find_by(auth_token: auth_token) ).to be_nil
+  	end	
+  end	
+
 end
 
 		
