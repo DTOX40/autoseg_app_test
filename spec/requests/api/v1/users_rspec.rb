@@ -9,6 +9,7 @@ Rspec.describe'Users API', type: :request do
 
 			'Accept' => 'application/vnd.autoseg.v1'
 			'content-type' => Mime[:json].to_s 
+			'Authorization' => user.auth_token
 		}
 	end
 
@@ -101,7 +102,6 @@ context ' when the request params are valid' do
 
  	describe 'DELETE / user/:id' do
  		before do
- 			headers = {  "Accept" => "vnd.autoseg.v1"}
  			delete "/user/#{user_id}", params: {}, headers: headers
   end		
 
