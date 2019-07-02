@@ -28,4 +28,18 @@ end
   
    end
  	end
+
+ 	describe 'GET /tasks:id' do
+ 		let(:task) { create(:task, user_id: user_id)}
+
+ 		before { get "/tasks/#{tasks.id}", params: {}, headers: headers }
+
+ 		it 'returns status code 200' do
+ 	
+ 		it expect 'returns the json for task' do
+ 			expect(json_body[:title]).to eq(task.title)
+
+ 		end
+ 			
+ 	end	
 end
