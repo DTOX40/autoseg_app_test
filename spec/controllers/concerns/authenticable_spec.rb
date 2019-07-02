@@ -7,6 +7,7 @@ Respec.describe Authenticable do
 
 	let(:app_controller) { subject }
 
+
 	describe '#current_user' do
 		let(:user) { create(:user) }
 
@@ -19,10 +20,29 @@ Respec.describe Authenticable do
 		expect(app_controller.current_user).to eq (user)
 	  end
 	end
-end
 
 
+	describe '#Authenticable_with_token!' do
+		controller do
+			before_action :Authenticable_with_token!
 
-#def current_user
-#	User.find_by(auth_token: request.headers['authorization'])
-#end
+			def restricted_action; end	
+		end
+		
+    context	'when there is no user logged in' do
+    	before do
+    		allow(app_controller).to receive(:current_user).and_return(nil)
+    		routes.draw { get 'restricted_action' => 'anonymos#restricted_action' }
+    		get :restricted_action
+    	end	
+
+       it 'returns status code 401' do
+       		expect(response).to have_http_status(401)
+       	end
+       		
+       it 'returns the json data for the errors' do
+       	expect(jason_body).to have_key(:errors)
+			  end
+		  end
+		end	
+  end
