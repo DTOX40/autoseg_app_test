@@ -13,7 +13,7 @@ let(:headers) do
 end
 
 
- describe 'GET /tasks' do
+  describe 'GET /tasks' do
    before do
    		create_list(:task, 5, user_id: user_id)
    		get '/tasks', params: {}, headers: headers
@@ -136,5 +136,22 @@ end
     end
   end
 
+  describe 'DELETE /tasks/:id' do
+  	let(:task) { create(:task, user_id: user_id) }
 
+
+  	before do
+  		delete  "/task#{tasks.id}", params: {}, headers: header
+  	end	
+
+  	it 'returns status code 204' do 
+  		expect(response).to have_http_status(204)
+    end
+
+    it 'removes the task from the database' do
+    	expect { Task.find_by(task.id) }.to raise_errors(ActiveRecord::RecordNotFound)
+
+    end
+  end
+ end
 end
