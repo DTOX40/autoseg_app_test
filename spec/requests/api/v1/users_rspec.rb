@@ -7,11 +7,11 @@ Rspec.describe'Users API', type: :request do
 	let(:headers) do
 		{
 
-			'Accept' => 'application/vnd.autoseg.v1',
-			'content-type' => Mime[:json].to_s, 
-			'access-token' => auth_data['access-token'],
-			'uid' => auth_data['uid'],
-			'client' => auth_data['client']
+		'Accept' => 'application/vnd.autoseg.v1',
+		'content-type' => Mime[:json].to_s, 
+		'access-token' => auth_data['access-token'],
+		'uid' => auth_data['uid'],
+		'client' => auth_data['client']
 		}
 	end
 
