@@ -2,7 +2,7 @@ class Api::V1::TasksController < ApplicationController
 	before_action :authenticate_with_token!
 
 	def index
-	  	current_user.tasks
+	  	current_user.tasks.ransack(params[:q]).result
 	  	render json: tasks, status: 200
 	end
 
@@ -23,27 +23,27 @@ class Api::V1::TasksController < ApplicationController
 	  end
  	end
 
- 		def update
- 			task = current_user.tasks.find(params[:id])
+ 	def update
+ 	 task = current_user.tasks.find(params[:id])
 
- 			if task.update_attributes(task_params)
- 			render json: task, status: 200
- 			else
- 			  render json: { errors: task.errors }, status: 422
- 		end
-
-
- 	    def destroy
-		  task = current_user.tasks.find(params[:id])
-		  task.destroy
-		  head 204		
-     	end	
+ 	  if task.update_attributes(task_params)
+ 	  render json: task, status: 200
+ 		else
+ 		 render json: { errors: task.errors }, status: 422
+ 	end
 
 
-    private
+ 	def destroy
+   task = current_user.tasks.find(params[:id])
+	 task.destroy
+	 head 204		
+  end	
 
-    def task_params
-      params.require(:task).permit(:title, :description, :deadline, :done)		
-    end
 
-end
+  private
+
+   def task_params
+    params.require(:task).permit(:title, :description, :deadline, :done)		
+   end
+
+ end

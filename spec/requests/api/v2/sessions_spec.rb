@@ -25,7 +25,7 @@ context 'when the credentials are corret' do
 	
 	  it 'returns the json data for the user with auth token' do
 	  		user.reload 
-		   expect(json_bdy[:auth_token]).to eq(user.auth_token)	
+		   expect(json_bdy[:data][:attributes][:'auth-token']).to eq(user.auth_token)	
 	   end
 	 end 
 

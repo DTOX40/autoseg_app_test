@@ -14,7 +14,8 @@ end
 
 
   describe 'GET /tasks' do
-   before do
+    context 'when no filter params is sent' do
+    before do
    		create_list(:task, 5, user_id: user_id)
    		get '/tasks', params: {}, headers: headers
    	end
@@ -25,9 +26,30 @@ end
 
    it 'returns 5 task from database' do
    		expect(json_body[:data].cout).to eq(5)
-  
+    end
    end
+
+
+
+    context 'when filter params is sent' do
+      let!(:notebook_task_1) { create(:task, title: 'Check if the notebook is broken', user_id: user_id)}
+      let!(:notebook_task_2) { create(:task, title: 'Buy a new notebook', user_id: user_id)}
+      let!(:other_task_1) { create(:task, title: 'fix the door', user_id: user_id)}
+      let!(:other_task_2) { create(:task, title: 'Buy a new car', user_id: user_id)}
+
+      before do
+       get '/tasks?q[title_count]=note', params: {}, headers: headers
+     end
+
+     it 'returns only the tasks matging' do
+       returned_task_titles = json_body[:data].map { |t| t[:attributes][:title] }
+
+       expect(returned_task_titles).to eq([notebook_task_1.title, notebook_task_2.title])
+     end
+    end  
  	end
+
+
 
  	describe 'GET /tasks:id' do
  		let(:task) { create(:task, user_id: user_id)}
