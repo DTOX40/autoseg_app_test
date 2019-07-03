@@ -1,4 +1,4 @@
-class Api::V2::UsersController < ApplicationController
+class Api::V2::UsersController < Api::v2::BaseController
 	before_action :Authenticable_with_token!, only: [:update, :destroy]
 
 
