@@ -1,10 +1,10 @@
 class Api::V2::TaskSerializer < ActiveModel::Serializer
   attributes :id, :title, :description, :done, :deadline, :user_id, :created_at, :update_at,
-  			  :short_description
+  			  :short_description :is_late, :deadline_to_br
 
 
   def short_description
-  	object.description[0..40]			  	
+  	object.description[0..40] if object.deadline.present?			  	
   end			  
 
   def is_late
