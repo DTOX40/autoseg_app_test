@@ -4,11 +4,14 @@ Rspec.descibe 'Task API' do
 	before { host! 'api.autoseg.test'}
 
 let!(:user) { create(:user) }
+let!(:auth_data) { user.create_new_token}
 let(:headers) do
 	{
 		'Content-Type' => Mime[:json].to_s,
 		'Accept' => 'application/vnd.autoseg.v2',
-		'Autorization' => user.auth_token
+		'access-token' => auth_data['access-token']
+    'uid' => auth_data['uid']
+    'client' => auth_data['client']
 	}	
 end
 
