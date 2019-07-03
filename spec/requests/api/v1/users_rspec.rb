@@ -3,53 +3,66 @@ require 'rails_helper'
 
 Rspec.describe'Users API', type: :request do
 	let!(:user) { create(:user) }  
-	let(:user_id) { user.id }
+	let!(:auth_data) { user.create_new_auth_token }
 	let(:headers) do
 		{
 
-			'Accept' => 'application/vnd.autoseg.v1'
-			'content-type' => Mime[:json].to_s 
-			'Authorization' => user.auth_token
+			'Accept' => 'application/vnd.autoseg.v1',
+			'content-type' => Mime[:json].to_s, 
+			'access-token' => auth_data['access-token'],
+			'uid' => auth_data['uid'],
+			'client' => auth_data['client']
 		}
 	end
 
 	before { host! 'api.autoseg.test' }
 
-	describe 'GET users/:id' do
-		before do
-			get "/users/#{user_id}", params: {}, headers: headers
+	describe 'GET /auth/validate_token' do
+	  before do
+			get '/auth/validate_token', params: {}, headers: headers
 			end
 
 
-			context 'when the user exists' do
-				it 'return the user' do 
-					expect(json_body['id']).to eq(user_id)
+			context 'when the reques headers are valid' do
+				it 'return the user id' do 
+					expect(json_body[:data][:id].to_i).to eq(user.id)
 			end		
+
+
+
 				it 'return status code 200' do
 					expect(response).to have_http_status(200)
 
 		end	
+   end
 
+   	context 'when the reques not headers are valid' do
+		 before do
+		 	  #headers['access-token'] = "invalid_token"
+		  	get '/auth/validate_token', params: {}, headers: headers
+			end
 
-		context 'returns status coide 404' do
-			expect(response).to have_http_status(404)
+		context 'returns status code 401' do
+			expect(response).to have_http_status(401)
 	end
+ end	
+end
 
-
-	describe 'POST/user' do	
+	describe 'POST/auth' do	
 		before do
-		post '/users', params: {  user: user_params }.to_json, headers: header
+		post '/auth', user_params: user_params.to_json, headers: header
 	end
 
 
 		context 'when the params are valid' do
 			let(:user_params) { attributes_for(:user) }
 
-			it 'return status code 201' do 
+			it 'return status code 200' do
+			  expect(response).to have_http_status(200) 
 		end		
 
 		it 'return json data for the created user 'do
-			expect(json_body[:email]).to eq(user_params[:email])
+			expect(json_body[:data][:email]).to eq(user_params[:email])
 			end
 		end
 
@@ -62,15 +75,15 @@ Rspec.describe'Users API', type: :request do
 			end	
 
 			it 'return the jason data for the erros' do
-				expect(json_body).to have_key(:erros)
+				expect(json_body).to have_key(:errors)
 
 			end	
 		end	
 
 
-		describe ' PUT /user/:id' do 
+		describe ' PUT /auth/:id' do 
 			before do
-				put "/user/#{user_id}", params: { user: user_params }.to_json, headers: headers
+				put '/auth', params: user_params.to_json, headers: headers
 end
 
 
@@ -82,14 +95,14 @@ end
 		end
 
 		it 'return the jason data for the update users' do
-				expect(json_body[:email]).to eq(user_params[:email])
+				expect(json_body[:data][:email]).to eq(user_params[:email])
 		end				
 	end
 
 context ' when the request params are valid' do 
 		let(:user_params) { { email: 'invalid_email@' } }
 
-		it 'returns status code 200' do 
+		it 'returns status code 422' do 
 			expect(response).to have_http_status(422)
 		end
 
@@ -100,13 +113,13 @@ context ' when the request params are valid' do
  end
 
 
- 	describe 'DELETE / user/:id' do
+ 	describe 'DELETE /auth' do
  		before do
- 			delete "/user/#{user_id}", params: {}, headers: headers
+ 			delete '/auth', params: {}, headers: headers
   end		
 
-  it ' return status code 204' do
-  expect(response).to have_http_status(204)
+  it ' return status code 200' do
+  expect(response).to have_http_status(200)
   end
   
 
