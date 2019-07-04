@@ -5,11 +5,11 @@ Rspec.descibe 'Task API' do
 
 let!(:user) { create(:user) }
 let(:headers) do
-	{
+	 {
 		'Content-Type' => Mime[:json].to_s,
 		'Accept' => 'application/vnd.autoseg.v1',
 		'Autorization' => user.auth_token
-	}	
+	 }	
 end
 
 

@@ -6,13 +6,13 @@ RSpec.describe 'Sessions API', type: :request do
 	let!(:auth_data) { user.create_new_token}
 	let(:headers)do 
 		{
-			'Accep' => 'application/vnd.autoseg.v2'
-			'Content-Type' => Mime[:json].to_s
-			'access-token' => auth_data['access-token'],
-      'uid' => auth_data['uid'],
-      'client' => auth_data['client']
+	   'Accep' => 'application/vnd.autoseg.v2',
+	   'Content-Type' => Mime[:json].to_s,
+	   'access-token' => auth_data['access-token'],
+     'uid' => auth_data['uid'],
+     'client' => auth_data['client']
 		}
- end
+  end
 
  	describe 'POST /auth/sing_in' do
  		before do
@@ -20,7 +20,7 @@ RSpec.describe 'Sessions API', type: :request do
 end
 
 context 'when the credentials are corret' do 
-	let(:credentials) { { email: user,email password: '123456' } }
+	let(:credentials) { { email: user.email, password: '123456' } }
 
 	 it 'returns status code 200' do
 		expect(response).to have_http_status(200)
@@ -33,16 +33,16 @@ context 'when the credentials are corret' do
 	   end
 	 end 
 
-context 'when the credentials are incorret' do 
-	let(:credentials) { { email: user,email password: 'invalid_password' } }
+   context 'when the credentials are incorret' do 
+	  let(:credentials) { { email: user.email, password: 'invalid_password' } }
 
-	 it 'returns status code 401' do
-		expect(response).to have_http_status(401)
-	 end
+	  it 'returns status code 401' do
+		  expect(response).to have_http_status(401)
+	  end
 	
 	  it 'returns the json data for the errors' do 
-		   expect(json_bdy[:auth_token]).to have_key(:errors)	
-	   end
+		  expect(json_bdy[:auth_token]).to have_key(:errors)	
+	  end
 	 end
   end
 

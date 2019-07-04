@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'database_cleaner'
 
 Respec.describe Authenticable do
 	controller(AplicationController) do
@@ -34,35 +35,35 @@ Respec.describe Authenticable do
     		allow(app_controller).to receive(:current_user).and_return(nil)
     		routes.draw { get 'restricted_action' => 'anonymos#restricted_action' }
     		get :restricted_action
-    	end	
+      end	
 
        it 'returns status code 401' do
        		expect(response).to have_http_status(401)
-       	end
+       end
        		
        it 'returns the json data for the errors' do
        	expect(jason_body).to have_key(:errors)
-			  end
-		  end
-		end	
+			 end
+		 end
+	 end	
 
 
-	   describe '#user_logged_in?' do 
-	   	context 'when there is a user logged in' do
- 				before do
- 					user = create(:user)
- 					allow(app_controller).to receive(:current_user).and_return(user)
- 				 and	
+	describe '#user_logged_in?' do
+    context 'when there is a user logged in' do
+      before do
+        user = create(:user)
+        allow(app_controller).to receive(:current_user).and_return(user)
+      end
 
- 				 it { expect(app_controller.user_logged_in?).to be true }
-	   	 end
+      it { expect(app_controller.user_logged_in?).to be true }
+    end
+    
+    context 'when there is no user logged in' do
+      before do        
+        allow(app_controller).to receive(:current_user).and_return(nil)
+      end
 
-	   	 	context 'when there is no user logged in' do
-	   	 		before do
-	   	 			allow(app_controller).to receive(:current_user).and_return(nil)
-	   	 		end	
-          
-          it { expect(app_controller.user_logged_in?).to be false }
-	   	  end		
-	   end	
+      it { expect(app_controller.user_logged_in?).to be false }
+    end
   end
+end
