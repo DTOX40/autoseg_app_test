@@ -1,27 +1,25 @@
 require 'rails_helper'
-require 'database_cleaner'
 
-Respec.describe Authenticable do
-	controller(AplicationController) do
-		include Authenticable
-	end	
+RSpec.describe Authenticable do
+  controller(ApplicationController) do
+    include Authenticable
+  end
 
 	let(:app_controller) { subject }
 
 
-	describe '#current_user' do
-		let(:user) { create(:user) }
+  describe '#current_user' do
+    let(:user) { create(:user) }
+   
+    before do
+      req = double(:headers => { 'Authorization' => user.auth_token })
+      allow(app_controller).to receive(:request).and_return(req)
+    end
 
-		before do
-			req = double(:headers => { 'authorization' => user.auth_token })
-			allow(app_controller).to receive(:request).and_return(req)
-		end
-		
-		it 'returns the user from the authorization header' do	
-		expect(app_controller.current_user).to eq (user)
-	  end
-	end
-
+    it 'returns the user from the authorization header' do
+      expect(app_controller.current_user).to eq(user)
+    end
+  end
 
 	describe '#Authenticable_with_token!' do
 		controller do

@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-Rspec.descibe 'Task API' do 
+RSpec.describe 'Task API' do 
 	before { host! 'api.autoseg.test'}
 
 let!(:user) { create(:user) }
-let!(:auth_data) { user.create_new_token}
+let!(:auth_data) { user.create_new_auth_token }
 let(:headers) do
 	{
 		'Content-Type' => Mime[:json].to_s,
@@ -34,11 +34,11 @@ end
 
 
 
-    context 'when filter and sorting params is sent' do
-      let!(:notebook_task_1) { create(:task, title: 'Check if the notebook is broken', user_id: user_id)}
-      let!(:notebook_task_2) { create(:task, title: 'Buy a new notebook', user_id: user_id)}
-      let!(:other_task_1) { create(:task, title: 'fix the door', user_id: user_id)}
-      let!(:other_task_2) { create(:task, title: 'Buy a new car', user_id: user_id)}
+    context 'when filter and sorting params are sent' do
+      let!(:notebook_task_1) { create(:task, title: 'Check if the notebook is broken', user_id: user.id) }
+      let!(:notebook_task_2) { create(:task, title: 'Buy a new notebook', user_id: user.id) }
+      let!(:other_task_1) { create(:task, title: 'Fix the door', user_id: user.id) }
+      let!(:other_task_2) { create(:task, title: 'Buy a new car', user_id: user.id) }
 
       before do
        get '/tasks?q[title_count]=note&q[s]=title+ASC', params: {}, headers: headers
@@ -52,9 +52,7 @@ end
     end  
  	end
 
-
-
- 	describe 'GET /tasks:id' do
+	describe 'GET /tasks/:id' do
  		let(:task) { create(:task, user_id: user_id)}
 
  		before { get "/tasks/#{tasks.id}", params: {}, headers: headers }
@@ -66,6 +64,8 @@ end
 
  		end
  	end	
+
+
 
  	describe 'POST /tasks' do
  		before do
@@ -97,7 +97,7 @@ end
  		end  	
 
  		context 'when the params are invalid' do
- 			le(:task_params) { attributes_for(:task, title: ' ') }
+ 			let(:task_params) { attributes_for(:task, title: ' ') }
 
  			it 'returns status code 422' do
  				expect(response).to have_http_status(422)

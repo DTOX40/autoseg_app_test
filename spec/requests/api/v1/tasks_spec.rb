@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-Rspec.descibe 'Task API' do 
+RSpec.describe 'Task API' do 
 	before { host! 'api.autoseg.test'}
 
 let!(:user) { create(:user) }
@@ -44,7 +44,7 @@ end
 
  	describe 'POST /tasks' do
  		before do
- 			post ' /tasks', params: { task: task_params}.to_json, headers: headers
+ 			post '/tasks', params: { task: task_params}.to_json, headers: headers
  		end	
 
  		context 'when the params are valid' do
@@ -72,7 +72,7 @@ end
  		end  	
 
  		context 'when the params are invalid' do
- 			le(:task_params) { attributes_for(:task, title: ' ') }
+      let(:task_params) { attributes_for(:task, title: ' ') }
 
  			it 'returns status code 422' do
  				expect(response).to have_http_status(422)
