@@ -12,6 +12,7 @@ module AutosegApp
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.api_only = true 
-    config.i18n.available_locales = :'pt-BR'
+    config.i18n.available_locales = :"pt-BR"
+    config.time_zone = 'Brasilia'
   end
 end
