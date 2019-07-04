@@ -3,9 +3,9 @@
         origins '*'
 
         resource '*', 
-        methods: [:get, :post, :delete, :put, :patch, :options, :head],
-        headers: :any,
-        expose: ['acces-token', 'expity' 'token-type', 'uid', 'client']
+          :headers => :any,
+          :expose  => ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+          :methods => [:get, :post, :options, :delete, :put]
       end
     
 end    
